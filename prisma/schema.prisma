@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model KhodamEntries {
+  id         String   @id @default(cuid())
+  first_name String
+  last_name  String
+  user_ip    String
+  created_at DateTime
+  khodamId   String
+  khodam     Khodam   @relation(fields: [khodamId], references: [khodam_id])
+
+  @@index([khodamId], name: "fk_khodam")
+}
+
+model Khodam {
+  khodam_id   String          @id @default(cuid())
+  name        String          @unique
+  description String
+  image_link  String
+  created_at  DateTime
+  entries     KhodamEntries[]
+}
